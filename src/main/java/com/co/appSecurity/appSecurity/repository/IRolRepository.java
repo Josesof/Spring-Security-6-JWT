@@ -1,7 +1,6 @@
 package com.co.appSecurity.appSecurity.repository;
 
 import com.co.appSecurity.appSecurity.models.Rol;
-import com.co.appSecurity.appSecurity.models.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

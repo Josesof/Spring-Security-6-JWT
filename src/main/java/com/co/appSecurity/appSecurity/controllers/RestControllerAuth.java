@@ -2,9 +2,6 @@ package com.co.appSecurity.appSecurity.controllers;
 
 import com.co.appSecurity.appSecurity.dtos.DtoAuthResponse;
 import com.co.appSecurity.appSecurity.dtos.DtoLogin;
-import com.co.appSecurity.appSecurity.dtos.DtoRegistro;
-import com.co.appSecurity.appSecurity.models.Rol;
-import com.co.appSecurity.appSecurity.models.Usuario;
 import com.co.appSecurity.appSecurity.repository.IRolRepository;
 import com.co.appSecurity.appSecurity.repository.IUsuarioRepository;
 import com.co.appSecurity.appSecurity.security.JwtTokenProvider;
@@ -21,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-import java.util.Collections;
-
 @RestController
 @RequestMapping("/api/auth/")
 public class RestControllerAuth {
@@ -38,7 +31,6 @@ public class RestControllerAuth {
   private JwtTokenProvider jwtTokenProvider;
 
   @Autowired
-
   public RestControllerAuth(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder,
                             IRolRepository rolRepository, IUsuarioRepository userRepository, JwtTokenProvider jwtTokenProvider) {
     this.authenticationManager = authenticationManager;
@@ -48,33 +40,8 @@ public class RestControllerAuth {
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
-  @PostMapping("register")
-  public ResponseEntity<String> registry(@RequestBody DtoRegistro dtoRegistro){
-    if(userRepository.existsByUsername(dtoRegistro.getUsername())){
-      return  new ResponseEntity<>("el usuario ya existe, intenta con otro", HttpStatus.BAD_REQUEST);
-    }
-    Usuario usuario =  new Usuario();
-    usuario.setUsername(dtoRegistro.getUsername());
-    usuario.setPasword(passwordEncoder.encode(dtoRegistro.getPassword()));
-    Rol roles = rolRepository.findByName("USER").get();
-    usuario.setRoles(Collections.singletonList(roles));
-    userRepository.save(usuario);
-return  new ResponseEntity<>("Registro de usuario exitoso", HttpStatus.OK);
-  }
 
-  @PostMapping("registerAdmin")
-  public ResponseEntity<String> registryAdmin(@RequestBody DtoRegistro dtoRegistro) {
-    if(userRepository.existsByUsername(dtoRegistro.getUsername())){
-      return  new ResponseEntity<>("el usuario ya existe, intenta con otro", HttpStatus.BAD_REQUEST);
-    }
-    Usuario usuario =  new Usuario();
-    usuario.setUsername(dtoRegistro.getUsername());
-    usuario.setPasword(passwordEncoder.encode(dtoRegistro.getPassword()));
-    Rol roles = rolRepository.findByName("USER").get();
-    usuario.setRoles(Collections.singletonList(roles));
-    userRepository.save(usuario);
-    return  new ResponseEntity<>("Registro de usuario exitoso", HttpStatus.OK);
-  }
+
 
   //Metodo para loguar un usuario y obtener el toke
   @PostMapping("login")
