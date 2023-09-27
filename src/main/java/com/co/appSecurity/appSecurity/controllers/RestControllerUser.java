@@ -16,10 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import com.co.appSecurity.appSecurity.constants.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /** @author Jose Johuar Mosquera */
 @Slf4j
@@ -56,10 +56,15 @@ public class RestControllerUser {
   }
 
   @GetMapping(ResponseConstant.ALL_USER_EMAIL)
-  public ResponseEntity<Object> getUserForEmail(@RequestParam(name = "email") String email) throws MsjException {
-    Map<String, Object> response = new HashMap<>();
-    response.put(ResponseConstant.STATUS, usuaroSevice.findByForEmail(email));
-    return new ResponseEntity<>(response,HttpStatus.OK);
+  public ResponseEntity<Map<String, Object>> getUserForEmail(@PathVariable(name = "email") String email) throws MsjException {
+    return Optional.ofNullable(usuaroSevice.findByForEmail(email))
+      .map(user -> {
+        Map<String, Object> response = new HashMap<>();
+        response.put(ResponseConstant.STATUS, user);
+        return ResponseEntity.ok(response);
+      })
+      .orElseGet(() -> ResponseEntity.notFound().build());
+
   }
 
   @PostMapping(ResponseConstant.USER_SAVE)
